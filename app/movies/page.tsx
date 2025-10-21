@@ -1,0 +1,185 @@
+'use client';
+
+import { useGetAllMoviesQuery } from "@/lib/features/movie/moviesApiSlice";
+import { Box, Button, CircularProgress, Stack, Typography } from "@mui/material";
+import {
+  Refresh as RefreshIcon
+} from "@mui/icons-material";
+import MovieList from "./components/MovieList";
+import MovieEntry from "./components/MovieEntry";
+import { useState } from 'react';
+import CustomLoading from '../components/CustomLoading';
+import IsAuth from "../components/IsAuth";
+import { log } from "../utils/logger";
+
+// let movies: Movie[] = [
+//   {
+//     "_id": "684a964b5749dd65e7b29990",
+//     "title": "Inception 3",
+//     "director": {
+//       "name": "Christopher Nolan",
+//       "phoneNo": "123-456-7890",
+//       "_id": "684bcd34b758682478c9a5d7"
+//     },
+//     "year": 2019
+//   },
+//   {
+//     "_id": "684b1fd39bf638816f8e959d",
+//     "title": "Inception",
+//     "director": {
+//       "name": "Christopher Nolan",
+//       "phoneNo": "123-456-7890",
+//       "_id": "684b1fd39bf638816f8e959e" },
+//     "year": 2010,
+//   }
+// ]
+
+type CenteredMessageProps = {
+  children: React.ReactNode;
+  color?: string;
+};
+
+const CenteredMessage = ({
+  children,
+  color
+}: CenteredMessageProps) => (
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "50vh",
+      px: 2,
+      textAlign: 'center'
+    }}
+  >
+    <Typography color={color}>
+      {children}
+    </Typography>
+  </Box>
+);
+
+function MoviePage() {
+  const { data, isError, isLoading, isSuccess, refetch, isFetching } = useGetAllMoviesQuery();
+  // useGetAllMoviesQuery(undefined, {
+  //   pollingInterval: 300000,
+  //   skipPollingIfUnfocused: true,
+  // });
+
+  log("fetching all movies", data);
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleBlur = () => {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  }
+
+  const refreshHandler = async () => {
+    log("refresh");
+
+    setIsRefreshing(true);
+
+    const delay = new Promise((resolve, reject) =>
+      setTimeout(resolve, 2000)
+    );
+
+    await Promise.all([refetch(), delay]);
+
+    setIsRefreshing(false);
+    handleBlur();
+  };
+
+  const isSpinning = isLoading || isRefreshing;
+
+  return (
+    <Box p={3}>
+
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={{ xs: 3, sm: 1 }}
+        sx={{
+          justifyContent: "space-between",
+          alignItems: { xs: "flex-start", sm: "center" },
+          my: 1
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: {
+              sm: 600,
+              md: 700,
+            },
+            fontSize: {
+              xs: '1.6rem',
+              sm: '1.8rem',
+              md: '2.2rem',
+            },
+          }}
+        >
+          🎬 My Movie Collections
+        </Typography>
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={
+            isRefreshing
+              ? <CircularProgress size={16} color="inherit" />
+              : <RefreshIcon />
+          }
+          onClick={refreshHandler}
+          sx={{
+            textTransform: 'none',
+            fontWeight: 500,
+          }}
+        >
+          Refresh
+        </Button>
+      </Stack>
+      <Box
+        sx={{
+          my: 2
+        }}
+      >
+
+        {/* New Movie From Section */}
+        <MovieEntry />
+
+        {
+          isSpinning && <CustomLoading height={"50vh"} />
+        }
+
+        {
+          isError && isSpinning &&
+          <CenteredMessage color="error">
+            Error loading movies. Please try again.
+          </CenteredMessage>
+        }
+
+        {
+          isSuccess && !isRefreshing && (
+            data?.length === 0
+              ? <CenteredMessage color="text.secondary">No movies found.</CenteredMessage>
+              : (
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  useFlexGap
+                  sx={{
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                  }}
+                >
+                  <MovieList movies={data} />
+                </Stack>
+              )
+          )
+        }
+      </Box>
+    </Box >
+  )
+}
+
+export default IsAuth(MoviePage);
