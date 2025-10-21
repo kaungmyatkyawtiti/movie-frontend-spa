@@ -1,8 +1,7 @@
 'use client';
 
-import { Box } from "@mui/material";
 import { useState } from "react";
-import ConfirmationDialog from "./ConfirmationDialog";
+import ConfirmationDialog from "../../../../components/ConfirmationDialog";
 import ReviewCard from "./ReviewCard";
 import ReviewFormDialog from "./ReviewFormDialog";
 import { useDeleteReviewByIdMutation } from "@/lib/features/review/reviewsApiSlice";
@@ -11,13 +10,13 @@ import { log, logError } from "@/app/utils/logger";
 import { showSnackbar } from "@/lib/features/snackbar/snackbarSlice";
 import { Review } from "@/app/types/reviews";
 
-interface InteractiveReviewCardProps {
+interface ReviewCardActionProps {
   review: Review;
 }
 
-export default function InteractiveReviewCard({
+export default function ReviewCardAction({
   review,
-}: InteractiveReviewCardProps) {
+}: ReviewCardActionProps) {
   const dispatch = useDispatch();
 
   const [deleteReview] = useDeleteReviewByIdMutation();
@@ -64,7 +63,7 @@ export default function InteractiveReviewCard({
   };
 
   return (
-    <Box>
+    <>
       <ReviewFormDialog
         open={editOpen}
         onClose={handleEditClose}
@@ -86,6 +85,6 @@ export default function InteractiveReviewCard({
         onDelete={handleDelete}
         onEdit={handleEdit}
       />
-    </Box>
+    </>
   );
 }

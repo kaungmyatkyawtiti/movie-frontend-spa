@@ -5,31 +5,21 @@ import {
   Button,
   TextField,
   Typography,
-  Link,
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
-import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm } from "react-hook-form";
 import { InferType } from 'yup';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { login, selectAuthToken } from '@/lib/features/auth/authSlice';
-import { redirect, useRouter, useSearchParams } from 'next/navigation';
+import { useAppDispatch } from '@/lib/hooks';
+import { login } from '@/lib/features/auth/authSlice';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { log, logError } from '@/app/utils/logger';
 import { showSnackbar } from '@/lib/features/snackbar/snackbarSlice';
 import useAuth from '@/app/auth/useAuth';
-
-const userSchema = yup.object({
-  username: yup
-    .string()
-    .required("username is required"),
-  password: yup
-    .string()
-    // .min(6, "password must be at least 6 characters")
-    .required("password is required"),
-}).required();
+import Link from 'next/link';
+import { userSchema } from '@/lib/schemas';
 
 type FormData = InferType<typeof userSchema>;
 
@@ -62,8 +52,6 @@ export default function SignIn() {
       password: '',
     },
   });
-
-  // with async/await 
 
   // const onSubmit: SubmitHandler<FormData> = async (data) => {
   const onSubmit = async (data: FormData) => {
@@ -102,20 +90,23 @@ export default function SignIn() {
   return (
     <Box
       sx={{
-        width: "100%",
-        maxWidth: 400,
-        margin: { xs: "1rem auto", sm: "3rem auto" },
-        px: { xs: 2, sm: 0 },
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        marginX: "2rem",
       }}
     >
       <Typography
         variant="h4"
         component="h1"
         gutterBottom
+        color='primary'
         sx={{
           textAlign: "center",
-          fontWeight: 500,
-          fontSize: { xs: "1.6rem", sm: "2rem" },
+          fontWeight: 600,
+          fontSize: "2rem"
         }}
       >
         Login Your Account
@@ -125,9 +116,7 @@ export default function SignIn() {
         noValidate
         onSubmit={handleSubmit(onSubmit)}
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 1
+          maxWidth: "450px",
         }}
       >
         <TextField
@@ -146,34 +135,39 @@ export default function SignIn() {
           {...register("password")}
           label="Password"
           type="password"
-          variant="outlined"
 
           error={!!errors.password}
           helperText={errors.password?.message}
+          variant="outlined"
           fullWidth
           margin="normal"
         />
 
-        <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
-          // label="I agree to the terms and conditions"
-          label="Remember Me"
-        />
+        {/* <FormControlLabel */}
+        {/*   control={<Checkbox value="remember" color="primary" />} */}
+        {/*   // label="I agree to the terms and conditions" */}
+        {/*   label="Remember Me" */}
+        {/* /> */}
 
-        <Button type="submit" variant="contained" fullWidth sx={{ my: 1 }}>
-          Sign in
-        </Button>
+        <Box>
+          <Link
+            href="/register"
+          >
+            <Typography
+              sx={{
+                display: "block",
+                my: 2,
+              }}
+            >
+              Don’t have an account? Create one
+            </Typography>
+          </Link>
 
-        <Link
-          component="button"
-          type='button'
-          onClick={() => router.push("/register")}
-          variant="body2"
-          sx={{ alignSelf: 'center' }}
-        >
-          Don’t have an account? Create one
-        </Link>
+          <Button type="submit" variant="contained">
+            Sign in
+          </Button>
+        </Box>
       </Box>
-    </Box>
+    </Box >
   );
 }

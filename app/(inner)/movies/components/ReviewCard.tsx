@@ -3,8 +3,6 @@ import {
   Delete as DeleteIcon,
   Edit as EditIcon
 } from "@mui/icons-material";
-import { useState } from 'react';
-import ReviewFormDialog from './ReviewFormDialog';
 import { Review } from "@/app/types/reviews";
 import { log } from "@/app/utils/logger";
 
@@ -27,7 +25,6 @@ export default function ReviewCard({
         borderRadius: 2,
         transition: "transform 0.2s ease, box-shadow 0.2s ease",
         "&:hover": {
-          transform: "translateY(-4px)",
           boxShadow: 3,
           cursor: "pointer",
         },

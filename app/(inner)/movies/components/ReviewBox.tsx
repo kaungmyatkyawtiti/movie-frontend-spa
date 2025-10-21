@@ -1,8 +1,8 @@
 import { useGetReviewByMovieIdQuery } from "@/lib/features/review/reviewsApiSlice";
 import { Box, Typography } from "@mui/material";
 import ReviewEntry from "./ReviewEntry";
-import InteractiveReviewCard from "./InteractiveReviewCard";
 import ReviewCardSkeleton from "./ReviewCardSkeleton";
+import ReviewCardAction from "./ReviewCardAction";
 
 export default function ReviewBox({ id }: { id: string }) {
   const { data: reviews, isError, isLoading, isSuccess, refetch, isFetching } = useGetReviewByMovieIdQuery(id);
@@ -20,7 +20,7 @@ export default function ReviewBox({ id }: { id: string }) {
             <Box display="flex" flexDirection="column" gap={2}>
               {
                 reviews.map((review) =>
-                  <InteractiveReviewCard
+                  <ReviewCardAction
                     key={review._id}
                     review={review} />
                 )

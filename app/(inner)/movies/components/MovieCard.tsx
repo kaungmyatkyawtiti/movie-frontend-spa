@@ -1,4 +1,4 @@
-import { Box, Card, CardActions, CardContent, CardMedia, Divider, IconButton, Typography } from "@mui/material";
+import { Box, Card, CardActions, CardContent, CardMedia, Divider, Grid, IconButton, Typography } from "@mui/material";
 import {
   InfoOutline as InfoOutlineIcon,
   DeleteOutline as DeleteOutlineIcon
@@ -18,18 +18,20 @@ export default function MovieCard({
 }: MovieCardProps) {
 
   return (
-    <Box>
+    <Grid>
       <Card
         sx={{
-          width: { xs: "90vw", sm: onDetailClick ? 250 : "100%" },
-          transition: "transform 0.2s ease, box-shadow 0.2s ease",
+          width: {
+            xs: "auto",
+            sm: onDetailClick ? 250 : "auto"
+          },
           ...(onDetailClick && {
             "&:hover": {
-              transform: "translateY(-4px)",
               boxShadow: 3,
               cursor: "pointer",
             },
           }),
+          transition: "transform 0.2s ease, box-shadow 0.2s ease",
         }}
       >
         <Box>
@@ -47,28 +49,31 @@ export default function MovieCard({
               variant="h6"
               component="div"
               noWrap={!!onDetailClick}
-              sx={{ mb: 1 }}
+              sx={{
+                mb: 1,
+              }}
             >
               {movie.title}
             </Typography>
 
             <Typography
               variant="subtitle2"
-              color="text.primary"
               noWrap={!!onDetailClick}
-              sx={{ mb: 0.5 }}>
+              sx={{ my: 1 }}>
               Director: {movie.director.name}
             </Typography>
 
             <Typography
-              variant="caption"
-              color="text.secondary"
+              variant="subtitle2"
               display="block"
-              sx={{ mb: 1 }}>
+              sx={{ mb: 1 }}
+            >
               Contact: {movie.director.phoneNo}
             </Typography>
 
-            <Typography variant="body2">
+            <Typography
+              variant="subtitle2"
+            >
               Year: {movie.year}
             </Typography>
           </CardContent>
@@ -99,6 +104,6 @@ export default function MovieCard({
           </>
         }
       </Card>
-    </Box >
+    </Grid>
   )
 }

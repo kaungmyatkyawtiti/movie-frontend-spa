@@ -1,14 +1,14 @@
 'use client';
 
 import { Box, Button } from "@mui/material";
-import ConfirmationDialog from "../movies/components/ConfirmationDialog";
 import { useState } from "react";
 import { useAppDispatch } from "@/lib/hooks";
 import { logout } from "@/lib/features/auth/authSlice";
 import { redirect } from "next/navigation";
-import { log, logError } from "../utils/logger";
-import IsAuth from "../components/IsAuth";
 import { showSnackbar } from "@/lib/features/snackbar/snackbarSlice";
+import { log } from "@/app/utils/logger";
+import ConfirmationDialog from "@/components/ConfirmDialog";
+import IsAuth from "@/components/IsAuth";
 
 function LogoutPage() {
   const dispatch = useAppDispatch();
@@ -33,12 +33,8 @@ function LogoutPage() {
     dispatch(logout());
     log("success logout");
     dispatch(showSnackbar("Successfully logout."));
-    redirect("/login");
     handleClose();
-
-    // dispatch(logout());
-    // handleClose();
-    // redirect("/login");
+    redirect("/login");
   };
 
   return (

@@ -11,8 +11,6 @@ import {
 import { useState } from "react";
 import MovieFormDialog from "../components/MovieFormDialog";
 import ReviewBox from "../components/ReviewBox";
-import IsAuth from "@/app/components/IsAuth";
-import CustomLoading from "@/app/components/CustomLoading";
 import MovieCardSkeleton from "../components/MovieCardSkeleton";
 import ReviewCardSkeleton from "../components/ReviewCardSkeleton";
 
@@ -47,10 +45,13 @@ function MovieDetailPage() {
       display="flex"
       flexDirection="column"
       alignItems="center"
-      padding={3}
-      gap={2}
+      padding={5}
     >
-      <Box position="relative" width="100%" maxWidth={600}>
+      <Box
+        position="relative"
+        width="100%"
+        maxWidth={600}
+      >
         <Box display="flex" alignItems="center" gap={1} mb={2}>
           <IconButton
             color="error"
@@ -97,4 +98,4 @@ function MovieDetailPage() {
   )
 }
 
-export default IsAuth(MovieDetailPage);
+export default MovieDetailPage;

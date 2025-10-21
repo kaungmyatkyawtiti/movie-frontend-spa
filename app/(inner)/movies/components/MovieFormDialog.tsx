@@ -10,11 +10,8 @@ import {
   TextField,
 } from "@mui/material";
 
-import * as yup from "yup"
-import { yupResolver } from "@hookform/resolvers/yup"
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Resolver, useForm } from "react-hook-form";
-import { InferType } from "yup";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useSaveMovieMutation, useUpdateMovieByIdMutation } from "@/lib/features/movie/moviesApiSlice";
 import { useEffect, useMemo } from "react";
 import z from 'zod';
@@ -22,59 +19,13 @@ import { useDispatch } from "react-redux";
 import { showSnackbar } from "@/lib/features/snackbar/snackbarSlice";
 import { log, logError } from "@/app/utils/logger";
 import { Movie } from "@/app/types/movies";
+import { movieSchema } from "@/lib/schemas";
 
 interface MovieFormDialogProps {
   open: boolean;
   onClose: () => void;
   movieToEdit?: Movie;
 }
-
-// with yup
-// const movieSchema = yup
-//   .object({
-//     title: yup.string().required("movie title is required"),
-//     director: yup.object({
-//       name: yup.string().required("director name is required"),
-//       phoneNo: yup.string().required("director phoneNo is required")
-//     }),
-//     year: yup
-//       .number()
-//       .typeError("year must be number")
-//       .positive("year must be positive number")
-//       .integer("year must be integer")
-//       .required("movie release year is required"),
-//   })
-//   .required()
-//
-// type MovieFormData = InferType<typeof movieSchema>
-
-const movieSchema = z.object({
-  title: z
-    .string()
-    .nonempty({ message: "movie title is required" })
-    .min(3, { message: "movie title min must be 2" }),
-  director: z
-    .object({
-      name: z
-        .string()
-        .nonempty({ message: "director name is required" })
-        .min(3, { message: "director name min must be 2" }),
-      phoneNo: z
-        .string()
-        .nonempty({ message: "director phoneNo is required" })
-        .min(3, { message: "director phoneNo min must be 2" }),
-    }),
-  year: z
-    .coerce
-    .number<number>()
-    .refine((val) => val !== 0, {
-      message: "year is required",
-    })
-    .positive({ message: "year must be positive number" })
-    .int({ message: "year must be an integer" })
-    .min(1800, { message: "year must be at least 1800" })
-  // .max(new Date().getFullYear() + 5, { message: "year is too far in the future" }),
-});
 
 type MovieFormData = z.infer<typeof movieSchema>;
 
@@ -114,7 +65,7 @@ export default function MovieFormDialog({
 
   const isSubmitting = saveMovieResult.isLoading || updateMovieResult.isLoading;
 
-  const onSubmit = async (data: MovieFormData) => {
+  const onSubmit: SubmitHandler<MovieFormData> = async (data) => {
     try {
       // log(data);
       if (!movieToEdit) {
@@ -157,7 +108,7 @@ export default function MovieFormDialog({
       slotProps={{
         paper: {
           sx: {
-            maxHeight: '90vh',
+            maxHeight: '100vh',
             width: '100%',
             maxWidth: 500,
           },
@@ -169,10 +120,6 @@ export default function MovieFormDialog({
         sx={{
           textAlign: "center",
           fontWeight: 500,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 1,
         }}
       >
         {
@@ -181,11 +128,7 @@ export default function MovieFormDialog({
             : "New Movie"
         }
       </DialogTitle>
-      <DialogContent
-        sx={{
-          py: 1
-        }}
-      >
+      <DialogContent>
         <DialogContentText>
           {
             movieToEdit
@@ -194,7 +137,11 @@ export default function MovieFormDialog({
           }
         </DialogContentText>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={2}>
+          <Grid
+            container
+            spacing={2}
+            sx={{ mt: 2 }}
+          >
             <Grid size={12}>
               <TextField
                 type="text"

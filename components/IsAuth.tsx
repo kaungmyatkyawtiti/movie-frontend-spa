@@ -5,8 +5,8 @@ import { useAppSelector } from "@/lib/hooks";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Box, Typography } from '@mui/material';
-import { log } from "../utils/logger";
-import useAuth from "../auth/useAuth";
+import useAuth from "@/app/auth/useAuth";
+import { log } from "@/app/utils/logger";
 
 function AuthCheckLoading() {
   return (

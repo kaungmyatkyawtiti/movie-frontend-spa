@@ -1,9 +1,8 @@
 'use client';
 
-import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import ConfirmationDialog from "./ConfirmationDialog";
+import ConfirmationDialog from "../../../../components/ConfirmationDialog";
 import MovieCard from "./MovieCard";
 import { useDeleteMovieByIdMutation } from "@/lib/features/movie/moviesApiSlice";
 import { log, logError } from "@/app/utils/logger";
@@ -11,11 +10,11 @@ import { useDispatch } from "react-redux";
 import { showSnackbar } from "@/lib/features/snackbar/snackbarSlice";
 import { Movie } from "@/app/types/movies";
 
-interface InteractiveMovieCardProps {
+interface MovieCardActionProps {
   movie: Movie;
 }
 
-export default function InteractiveMovieCard({ movie }: InteractiveMovieCardProps) {
+export default function MovieCardAction({ movie }: MovieCardActionProps) {
   const dispatch = useDispatch();
 
   const [deleteMovie, deleteMovieResult] = useDeleteMovieByIdMutation();
@@ -61,7 +60,7 @@ export default function InteractiveMovieCard({ movie }: InteractiveMovieCardProp
   }
 
   return (
-    <Box>
+    <>
       <ConfirmationDialog
         open={open}
         keepMounted={true}
@@ -76,6 +75,6 @@ export default function InteractiveMovieCard({ movie }: InteractiveMovieCardProp
         onDetailClick={() => handleDetailClick(movie)}
         onDelete={() => handleDelete(movie)}
       />
-    </Box>
+    </>
   )
 }

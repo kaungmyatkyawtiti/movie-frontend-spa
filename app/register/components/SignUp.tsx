@@ -5,10 +5,10 @@ import {
   Button,
   TextField,
   Typography,
-  Link,
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function SignUp() {
@@ -17,20 +17,23 @@ export default function SignUp() {
   return (
     <Box
       sx={{
-        width: "100%",
-        maxWidth: 400,
-        margin: { xs: "1rem auto", sm: "3rem auto" },
-        px: { xs: 2, sm: 0 },
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        marginX: "2rem",
       }}
     >
       <Typography
         variant="h5"
         component="h1"
         gutterBottom
+        color='primary'
         sx={{
           textAlign: "center",
-          fontWeight: 500,
-          fontSize: { xs: "1.6rem", sm: "2rem" },
+          fontWeight: 600,
+          fontSize: "2rem",
         }}
       >
         Register Your Account
@@ -39,12 +42,10 @@ export default function SignUp() {
         component="form"
         noValidate
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
+          maxWidth: "450px",
         }}
       >
         <TextField
-
           label="Username"
           type="text"
           variant="outlined"
@@ -69,24 +70,29 @@ export default function SignUp() {
           margin="normal"
         />
 
-        <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
-          label="I agree to the terms and conditions"
-        />
+        {/* <FormControlLabel */}
+        {/*   control={<Checkbox value="remember" color="primary" />} */}
+        {/*   label="I agree to the terms and conditions" */}
+        {/* /> */}
 
-        <Button type="submit" variant="contained" fullWidth sx={{ my: 1 }}>
-          Register
-        </Button>
+        <Box>
+          <Link
+            href="/login"
+          >
+            <Typography
+              sx={{
+                display: "block",
+                my: 2,
+              }}
+            >
+              Already have an account? Sign in
+            </Typography>
+          </Link>
 
-        <Link
-          component="button"
-          type='button'
-          onClick={() => router.push("/login")}
-          variant="body2"
-          sx={{ alignSelf: 'center' }}
-        >
-          Already have an account? Sign in
-        </Link>
+          <Button type="submit" variant="contained">
+            Register
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

@@ -1,10 +1,11 @@
+"use client";
+
 import { hideSnackbar, selectMsg } from "@/lib/features/snackbar/snackbarSlice";
-import { useAppSelector } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { Snackbar } from "@mui/material";
-import { useDispatch } from "react-redux";
 
 export default function GlobalSnackbar() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const message = useAppSelector(selectMsg);
 
   return (

@@ -11,10 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { InferType } from "yup";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { Star as StarIcon } from "@mui/icons-material";
 import { useSaveReviewMutation, useUpdateReviewByIdMutation } from "@/lib/features/review/reviewsApiSlice";
@@ -22,6 +19,9 @@ import { log, logError } from "@/app/utils/logger";
 import { showSnackbar } from "@/lib/features/snackbar/snackbarSlice";
 import { useDispatch } from "react-redux";
 import { Review } from "@/app/types/reviews";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { reviewSchema } from "@/lib/schemas";
 
 interface ReviewFormDialogProps {
   open: boolean;
@@ -30,14 +30,7 @@ interface ReviewFormDialogProps {
   reviewToEdit?: Review;
 }
 
-const reviewSchema = yup.object({
-  review: yup
-    .string()
-    .required("review is required")
-    .min(4, "review must be 4"),
-});
-
-type ReviewFormData = InferType<typeof reviewSchema>;
+type ReviewFormData = z.infer<typeof reviewSchema>;
 
 export default function ReviewFormDialog({
   open,
@@ -50,7 +43,7 @@ export default function ReviewFormDialog({
   const [saveReview, saveReviewResult] = useSaveReviewMutation();
   const [updateReview, updateReviewResult] = useUpdateReviewByIdMutation();
 
-  // Rating  
+  // Rating
   const [rating, setRating] = useState<number>(reviewToEdit?.rating ?? 0);
 
   // hookform
@@ -60,7 +53,7 @@ export default function ReviewFormDialog({
     reset,
     formState: { errors },
   } = useForm<ReviewFormData>({
-    resolver: yupResolver(reviewSchema),
+    resolver: zodResolver(reviewSchema),
     defaultValues: {
       review: reviewToEdit?.review ?? "",
     },
@@ -71,11 +64,9 @@ export default function ReviewFormDialog({
       review: reviewToEdit?.review ?? "",
     });
     setRating(reviewToEdit?.rating ?? 0);
-  }, [reviewToEdit, reset, open]);
+  }, [reviewToEdit]);
 
-  const isSubmitting = saveReviewResult.isLoading || updateReviewResult.isLoading;
-
-  const onSubmit = async (data: ReviewFormData) => {
+  const onSubmit: SubmitHandler<ReviewFormData> = async (data) => {
     try {
       if (reviewToEdit) {
         const updated = {
@@ -106,6 +97,8 @@ export default function ReviewFormDialog({
     }
   };
 
+  const isSubmitting = saveReviewResult.isLoading || updateReviewResult.isLoading;
+
   return (
     <Dialog
       open={open}
@@ -113,7 +106,7 @@ export default function ReviewFormDialog({
       scroll="paper"
       slotProps={{
         paper: {
-          sx: { maxHeight: "90vh", width: "100%", maxWidth: 500 },
+          sx: { maxHeight: "100vh", width: "100%", maxWidth: 500 },
         },
       }}
     >
@@ -122,21 +115,14 @@ export default function ReviewFormDialog({
         sx={{
           textAlign: "center",
           fontWeight: 500,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
           gap: 1,
-
         }}
       >
         {
           reviewToEdit ? "Edit Review" : "New Review"
         }
-        {isSubmitting && <CircularProgress size={20} />}
       </DialogTitle>
-      <DialogContent
-        sx={{ py: 1 }}
-      >
+      <DialogContent>
         <DialogContentText>
           {
             reviewToEdit
@@ -146,7 +132,11 @@ export default function ReviewFormDialog({
         </DialogContentText>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={2} sx={{ mt: 3 }}>
+          <Grid
+            container
+            spacing={2}
+            sx={{ mt: 3 }}
+          >
             <Grid size={12}>
               <Rating
                 name="rating"
