@@ -80,9 +80,15 @@ export default function SignUp() {
             href="/login"
           >
             <Typography
+              color='primary'
               sx={{
                 display: "block",
                 my: 2,
+                cursor: "pointer",
+                textDecoration: "none",
+                "&:hover": {
+                  textDecoration: "underline",
+                },
               }}
             >
               Already have an account? Sign in

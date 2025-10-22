@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { navItems } from "@/lib/items";
+import { navItems } from "@/lib/useNavItems";
 
 interface MobileNavProps {
   open: boolean;
@@ -44,11 +44,16 @@ export default function MobileNav({
         sx={{
           width: 280,
           height: 70,
-          background: "linear-gradient(to left, #3f51b5, #2196f3)",
-          position: "relative",
+          bgcolor: "primary.main",
+          display: "grid",
+          placeItems: "center",
         }}
       >
-        <Typography>
+        <Typography
+          color="primary.contrastText"
+          variant="h5"
+          fontWeight="bold"
+        >
           My Movie
         </Typography>
       </Box>

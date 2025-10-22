@@ -12,7 +12,7 @@ function AuthCheckLoading() {
   return (
     <Box
       sx={{
-        height: "60vh",
+        minHeight: "100vh",
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

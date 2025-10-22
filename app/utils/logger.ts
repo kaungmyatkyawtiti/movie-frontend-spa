@@ -8,6 +8,6 @@ export function log(...args: unknown[]): void {
 
 export function logError(...args: unknown[]): void {
   if (logEnabled) {
-    console.error("error logging", ...args);
+    console.warn("error logging", ...args);
   }
 }

@@ -5,7 +5,6 @@ import { Box, Stack } from "@mui/material";
 import MovieList from "./components/MovieList";
 import MovieEntry from "./components/MovieEntry";
 import { useState } from 'react';
-import IsAuth from "@/components/IsAuth";
 import CustomLoading from "@/components/CustomLoading";
 import { log } from "@/app/utils/logger";
 import CenteredMessage from "@/components/CenteredText";

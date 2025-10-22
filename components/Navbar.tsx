@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { navItems } from "@/lib/items";
+import { navItems } from "@/lib/useNavItems";
 
 export default function Navbar() {
   const pathname = usePathname();

@@ -154,9 +154,15 @@ export default function SignIn() {
             href="/register"
           >
             <Typography
+              color='primary'
               sx={{
                 display: "block",
                 my: 2,
+                cursor: "pointer",
+                textDecoration: "none",
+                "&:hover": {
+                  textDecoration: "underline",
+                },
               }}
             >
               Don’t have an account? Create one

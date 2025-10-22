@@ -1,4 +1,7 @@
+"use client";
+
 import Header from "@/components/Header";
+import IsAuth from "@/components/IsAuth";
 import { Box } from "@mui/material";
 
 interface HomeLayoutProps {
@@ -23,4 +26,4 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
   )
 }
 
-export default HomeLayout;
+export default IsAuth(HomeLayout);
