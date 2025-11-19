@@ -5,10 +5,10 @@ import { useState } from "react";
 import ConfirmationDialog from "../../../../components/ConfirmationDialog";
 import MovieCard from "./MovieCard";
 import { useDeleteMovieByIdMutation } from "@/lib/features/movie/moviesApiSlice";
-import { log, logError } from "@/app/utils/logger";
+import { log, logError } from "@/utils/logger";
 import { useDispatch } from "react-redux";
-import { showSnackbar } from "@/lib/features/snackbar/snackbarSlice";
-import { Movie } from "@/app/types/movies";
+import { showNoti } from "@/lib/features/noti/notiSlice";
+import { Movie } from "@/types/movies";
 
 interface MovieCardActionProps {
   movie: Movie;
@@ -19,8 +19,6 @@ export default function MovieCardAction({ movie }: MovieCardActionProps) {
 
   const [deleteMovie, deleteMovieResult] = useDeleteMovieByIdMutation();
 
-  const [targetId, setTargetId] = useState<string | null>(null);
-
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
@@ -30,14 +28,14 @@ export default function MovieCardAction({ movie }: MovieCardActionProps) {
     setOpen(false);
   };
 
-  const handleDeleteConfirm = async (id: string) => {
+  const handleDeleteConfirm = async () => {
     try {
-      const result = await deleteMovie(id).unwrap();
+      const result = await deleteMovie(movie._id).unwrap();
       log("successfully deleted", result);
-      dispatch(showSnackbar("Movie deleted successfully!"));
+      dispatch(showNoti("Movie deleted successfully!"));
     } catch (error) {
-      logError("delete error", error);
-      dispatch(showSnackbar("Failed to delete movie."));
+      log("delete error", error);
+      dispatch(showNoti("Failed to delete movie."));
     } finally {
       handleClose();
     }
@@ -49,12 +47,11 @@ export default function MovieCardAction({ movie }: MovieCardActionProps) {
   }
 
   // For MovieCard
-  const handleDelete = (movie: Movie) => {
-    setTargetId(movie._id);
+  const handleDelete = () => {
     setOpen(true);
   };
 
-  const handleDetailClick = (movie: Movie) => {
+  const handleDetailClick = () => {
     log("click");
     router.push(`/movies/${movie._id}`);
   }
@@ -66,14 +63,14 @@ export default function MovieCardAction({ movie }: MovieCardActionProps) {
         keepMounted={true}
         title={movie.title}
         message={"are you sure to delete?"}
-        onConfirm={() => targetId && handleDeleteConfirm(targetId)}
+        onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteDecline}
       />
       <MovieCard
         movie={movie}
         // onShowConfirmDialog={handleShowConfirmDialog}
-        onDetailClick={() => handleDetailClick(movie)}
-        onDelete={() => handleDelete(movie)}
+        onDetailClick={handleDetailClick}
+        onDelete={handleDelete}
       />
     </>
   )

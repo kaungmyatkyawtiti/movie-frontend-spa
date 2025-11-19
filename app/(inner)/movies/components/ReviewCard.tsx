@@ -3,8 +3,8 @@ import {
   Delete as DeleteIcon,
   Edit as EditIcon
 } from "@mui/icons-material";
-import { Review } from "@/app/types/reviews";
-import { log } from "@/app/utils/logger";
+import { log } from "@/utils/logger";
+import { Review } from "@/types/reviews";
 
 export interface ReviewCardProps {
   review: Review;

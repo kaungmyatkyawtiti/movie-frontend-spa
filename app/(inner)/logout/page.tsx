@@ -4,15 +4,15 @@ import { Box, Button } from "@mui/material";
 import { useState } from "react";
 import { useAppDispatch } from "@/lib/hooks";
 import { logout } from "@/lib/features/auth/authSlice";
-import { redirect } from "next/navigation";
-import { showSnackbar } from "@/lib/features/snackbar/snackbarSlice";
-import { log } from "@/app/utils/logger";
+import { redirect, useRouter } from "next/navigation";
+import { log } from "@/utils/logger";
 import ConfirmationDialog from "@/components/ConfirmDialog";
 import IsAuth from "@/components/IsAuth";
+import { showNoti } from "@/lib/features/noti/notiSlice";
 
 function LogoutPage() {
   const dispatch = useAppDispatch();
-
+  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const showConfirmDialog = () => {
@@ -30,11 +30,16 @@ function LogoutPage() {
   }
 
   const handleConfirm = () => {
-    dispatch(logout());
-    log("success logout");
-    dispatch(showSnackbar("Successfully logout."));
-    handleClose();
-    redirect("/login");
+    try {
+      dispatch(logout());
+      dispatch(showNoti("Successfully logout."));
+      router.push("/login");
+    } catch (err) {
+      log("logout error", err);
+      dispatch(showNoti("Failed to logout."));
+    } finally {
+      handleClose();
+    }
   };
 
   return (

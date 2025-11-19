@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { navItems } from "@/lib/items";
+import { navItems } from "./Navbar";
 
 interface MobileNavProps {
   open: boolean;

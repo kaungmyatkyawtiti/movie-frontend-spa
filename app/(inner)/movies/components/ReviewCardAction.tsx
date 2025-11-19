@@ -6,9 +6,9 @@ import ReviewCard from "./ReviewCard";
 import ReviewFormDialog from "./ReviewFormDialog";
 import { useDeleteReviewByIdMutation } from "@/lib/features/review/reviewsApiSlice";
 import { useDispatch } from "react-redux";
-import { log, logError } from "@/app/utils/logger";
-import { showSnackbar } from "@/lib/features/snackbar/snackbarSlice";
-import { Review } from "@/app/types/reviews";
+import { log, logError } from "@/utils/logger";
+import { showNoti } from "@/lib/features/noti/notiSlice";
+import { Review } from "@/types/reviews";
 
 interface ReviewCardActionProps {
   review: Review;
@@ -20,8 +20,6 @@ export default function ReviewCardAction({
   const dispatch = useDispatch();
 
   const [deleteReview] = useDeleteReviewByIdMutation();
-
-  const [targetReview, setTargetReview] = useState<Review | null>(null);
 
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -37,9 +35,8 @@ export default function ReviewCardAction({
   };
 
   // delete dialog 
-  const handleDelete = (review: Review) => {
+  const handleDelete = () => {
     log("delete");
-    setTargetReview(review);
     setDeleteOpen(true);
   };
 
@@ -48,15 +45,13 @@ export default function ReviewCardAction({
   };
 
   const handleDeleteConfirm = async () => {
-    if (!targetReview) return;
-
     try {
-      const result = await deleteReview(targetReview).unwrap();
+      const result = await deleteReview(review).unwrap();
       log("successfully deleted", result);
-      dispatch(showSnackbar("Review deleted successfully!"));
+      dispatch(showNoti("Review deleted successfully!"));
     } catch (error) {
-      logError("delete error", error);
-      dispatch(showSnackbar("Failed to delete review."));
+      log("delete error", error);
+      dispatch(showNoti("Failed to delete review."));
     } finally {
       handleDeleteClose();
     }

@@ -3,7 +3,8 @@ import {
   InfoOutline as InfoOutlineIcon,
   DeleteOutline as DeleteOutlineIcon
 } from "@mui/icons-material";
-import { Movie } from "@/app/types/movies";
+import Image from "next/image";
+import { Movie } from "@/types/movies";
 
 interface MovieCardProps {
   movie: Movie,
@@ -21,10 +22,7 @@ export default function MovieCard({
     <Grid>
       <Card
         sx={{
-          width: {
-            xs: "auto",
-            sm: onDetailClick ? 250 : "auto"
-          },
+          width: onDetailClick ? 250 : "auto",
           ...(onDetailClick && {
             "&:hover": {
               boxShadow: 3,
@@ -36,14 +34,30 @@ export default function MovieCard({
       >
         <Box>
           <CardMedia
-            component="img"
-            image="https://www.vintagemovieposters.co.uk/wp-content/uploads/2019/06/IMG_9698.jpeg"
-            alt={movie.title}
             sx={{
-              height: 'auto',
-              objectFit: 'cover',
+              position: "relative",
+              overflow: "hidden",
+              ...(onDetailClick
+                ? {
+                  height: 350,
+                }
+                : {
+                  height: 550,
+                }),
             }}
-          />
+          >
+            <Image
+              src="/movie.jpg"
+              alt={movie.title}
+              fill
+              sizes="auto"
+              priority
+              style={{
+                objectFit: "cover",
+                objectPosition: "bottom",
+              }}
+            />
+          </CardMedia>
           <CardContent>
             <Typography
               variant="h6"
@@ -104,6 +118,6 @@ export default function MovieCard({
           </>
         }
       </Card>
-    </Grid>
+    </Grid >
   )
 }

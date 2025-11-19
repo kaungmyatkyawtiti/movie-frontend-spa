@@ -16,10 +16,10 @@ import { useSaveMovieMutation, useUpdateMovieByIdMutation } from "@/lib/features
 import { useEffect, useMemo } from "react";
 import z from 'zod';
 import { useDispatch } from "react-redux";
-import { showSnackbar } from "@/lib/features/snackbar/snackbarSlice";
-import { log, logError } from "@/app/utils/logger";
-import { Movie } from "@/app/types/movies";
-import { movieSchema } from "@/lib/schemas";
+import { log, logError } from "@/utils/logger";
+import { movieSchema } from "@/data/schemas";
+import { showNoti } from "@/lib/features/noti/notiSlice";
+import { Movie } from "@/types/movies";
 
 interface MovieFormDialogProps {
   open: boolean;
@@ -66,37 +66,41 @@ export default function MovieFormDialog({
   const isSubmitting = saveMovieResult.isLoading || updateMovieResult.isLoading;
 
   const onSubmit: SubmitHandler<MovieFormData> = async (data) => {
-    try {
-      // log(data);
-      if (!movieToEdit) {
-        const newMovie = data;
-        const response = await saveMovie(newMovie).unwrap();
-
-        log("new movie successfully saved", response);
-        dispatch(showSnackbar("New movie saved successfully!"));
-      } else {
-        const updated: Movie = {
-          _id: movieToEdit._id,
-          title: data.title,
-          year: data.year,
-          director: {
-            _id: movieToEdit.director._id,
-            name: data.director.name,
-            phoneNo: data.director.phoneNo,
-          },
-        };
-
-        const response = await updateMovie(updated).unwrap();
-
-        log("successfully updated", response);
-        dispatch(showSnackbar("Movie updated successfully!"));
+    if (movieToEdit) {
+      const updated: Movie = {
+        _id: movieToEdit._id,
+        title: data.title,
+        year: data.year,
+        director: {
+          _id: movieToEdit.director._id,
+          name: data.director.name,
+          phoneNo: data.director.phoneNo,
+        },
+      };
+      try {
+        const data = await updateMovie(updated).unwrap();
+        log("update movie success from movie dialog", data);
+        dispatch(showNoti("Successfully update movie"));
+      } catch (err) {
+        log("update movie error from movie dialog", err);
+        dispatch(showNoti("Failed to update movie"));
+      } finally {
+        reset();
+        onClose();
       }
-    } catch (err) {
-      logError("fail to save/update movie", err);
-      dispatch(showSnackbar("Failed to save/update movie"));
-    } finally {
-      reset();
-      onClose();
+    } else {
+      const newMovie = data;
+      try {
+        const data = await saveMovie(newMovie).unwrap();
+        log("save movie success from movie dialog", data);
+        dispatch(showNoti("Successfully save movie"));
+      } catch (err) {
+        log("save movie error from movie dialog", err);
+        dispatch(showNoti("Failed to save movie"));
+      } finally {
+        reset();
+        onClose();
+      }
     }
   };
 

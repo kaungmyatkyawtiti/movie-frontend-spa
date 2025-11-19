@@ -1,6 +1,6 @@
 "use client";
 
-import { hideSnackbar, selectMsg } from "@/lib/features/snackbar/snackbarSlice";
+import { hideNofi, selectMsg } from "@/lib/features/noti/notiSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { Snackbar } from "@mui/material";
 
@@ -16,7 +16,7 @@ export default function GlobalSnackbar() {
       }}
       open={!!message}
       autoHideDuration={3000}
-      onClose={() => dispatch(hideSnackbar())}
+      onClose={() => dispatch(hideNofi())}
       message={message}
       sx={{
         maxWidth: { xs: '65%' }

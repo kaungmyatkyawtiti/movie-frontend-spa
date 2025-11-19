@@ -1,22 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit";
 
-export type SnackbarState = {
+export type NotiState = {
   message: string | null;
 }
 
-const initialState: SnackbarState = {
+const initialState: NotiState = {
   message: null,
 }
 
-export const snackbarSlice = createSlice({
+export const notiSlice = createSlice({
   name: "snackbar",
   initialState,
   reducers: (create) => ({
-    showSnackbar: create.reducer((state, action: PayloadAction<string>) => {
+    showNoti: create.reducer((state, action: PayloadAction<string>) => {
       state.message = action.payload;
     }),
-    hideSnackbar: create.reducer((state) => {
+    hideNofi: create.reducer((state) => {
       state.message = null;
     }),
   }),
@@ -26,10 +26,10 @@ export const snackbarSlice = createSlice({
 })
 
 export const {
-  showSnackbar,
-  hideSnackbar
-} = snackbarSlice.actions;
+  showNoti,
+  hideNofi,
+} = notiSlice.actions;
 
 export const {
   selectMsg
-} = snackbarSlice.selectors;
+} = notiSlice.selectors;

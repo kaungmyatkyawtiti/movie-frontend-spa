@@ -1,8 +1,8 @@
 'use client';
 
 import { Grid } from "@mui/material";
-import { Movie } from "@/app/types/movies";
 import MovieCardAction from "./MovieCardAction";
+import { Movie } from "@/types/movies";
 
 interface MovieListProps {
   movies: Movie[];

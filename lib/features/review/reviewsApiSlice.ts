@@ -1,6 +1,6 @@
-import { log, logError } from "@/app/utils/logger";
-import { Review } from "@/app/types/reviews";
+import { log, logError } from "@/utils/logger";
 import { moviesApiSlice } from "../movie/moviesApiSlice";
+import { Review } from "@/types/reviews";
 
 export type NewReview = Omit<Review, "_id">;
 

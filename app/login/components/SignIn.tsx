@@ -9,17 +9,17 @@ import {
   Checkbox,
 } from '@mui/material';
 import { yupResolver } from "@hookform/resolvers/yup"
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { InferType } from 'yup';
 import { useAppDispatch } from '@/lib/hooks';
 import { login } from '@/lib/features/auth/authSlice';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
-import { log, logError } from '@/app/utils/logger';
-import { showSnackbar } from '@/lib/features/snackbar/snackbarSlice';
+import { log, logError } from '@/utils/logger';
 import useAuth from '@/app/auth/useAuth';
 import Link from 'next/link';
-import { userSchema } from '@/lib/schemas';
+import { userSchema } from '@/data/schemas';
+import { showNoti } from '@/lib/features/noti/notiSlice';
 
 type FormData = InferType<typeof userSchema>;
 
@@ -53,10 +53,9 @@ export default function SignIn() {
     },
   });
 
-  // const onSubmit: SubmitHandler<FormData> = async (data) => {
-  const onSubmit = async (data: FormData) => {
+  // const onSubmit = async (data: FormData) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     log("Sign in data:", data);
-
     try {
       const result = await dispatch(login(data)).unwrap();
       log("success", result);
@@ -65,12 +64,10 @@ export default function SignIn() {
       } else {
         router.push("/dashboard");
       }
-
-      dispatch(showSnackbar("Successfully login."));
+      dispatch(showNoti("Successfully login."));
     } catch (err) {
-      logError("login failed", err);
-
-      const errMsg = err as string;
+      log("login error from SignIn", err, "err instance of Error", err instanceof Error);
+      const errMsg = err instanceof Error ? err.message : err as string;
       const fields: (keyof FormData)[] = ["username", "password"];
       fields.forEach(field => {
         setError(field, {
@@ -78,7 +75,7 @@ export default function SignIn() {
           message: errMsg,
         });
       });
-      dispatch(showSnackbar("Failed to login!"));
+      dispatch(showNoti("Failed to login!"));
     } finally {
       reset(
         { username: "", password: "" },

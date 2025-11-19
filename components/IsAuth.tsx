@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Box, Typography } from '@mui/material';
 import useAuth from "@/app/auth/useAuth";
-import { log } from "@/app/utils/logger";
+import { log } from "@/utils/logger";
 
 function AuthCheckLoading() {
   return (

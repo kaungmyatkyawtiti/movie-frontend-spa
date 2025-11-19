@@ -15,13 +15,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { Star as StarIcon } from "@mui/icons-material";
 import { useSaveReviewMutation, useUpdateReviewByIdMutation } from "@/lib/features/review/reviewsApiSlice";
-import { log, logError } from "@/app/utils/logger";
-import { showSnackbar } from "@/lib/features/snackbar/snackbarSlice";
+import { log, logError } from "@/utils/logger";
 import { useDispatch } from "react-redux";
-import { Review } from "@/app/types/reviews";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { reviewSchema } from "@/lib/schemas";
+import { reviewSchema } from "@/data/schemas";
+import { showNoti } from "@/lib/features/noti/notiSlice";
+import { Review } from "@/types/reviews";
 
 interface ReviewFormDialogProps {
   open: boolean;
@@ -67,33 +67,41 @@ export default function ReviewFormDialog({
   }, [reviewToEdit]);
 
   const onSubmit: SubmitHandler<ReviewFormData> = async (data) => {
-    try {
-      if (reviewToEdit) {
-        const updated = {
-          _id: reviewToEdit._id,
-          movie: reviewToEdit.movie,
-          review: data.review,
-          rating,
-        };
-        const response = await updateReview(updated).unwrap();
-        log("successfully updated", response);
-        dispatch(showSnackbar("Review updated successfully!"));
-      } else {
-        const newOne = {
-          movie: movieId,
-          review: data.review,
-          rating,
-        };
-        const response = await saveReview(newOne).unwrap();
-        log("new review successfully saved", response);
-        dispatch(showSnackbar("New review saved successfully!"));
+    if (reviewToEdit) {
+      const updated = {
+        _id: reviewToEdit._id,
+        movie: reviewToEdit.movie,
+        review: data.review,
+        rating,
+      };
+      try {
+        const data = await updateReview(updated);
+        log("update review success from review dialog", data);
+        dispatch(showNoti("Successfully update review."));
+      } catch (err) {
+        log("update review error from review dialog", err);
+        dispatch(showNoti("Failed to update review."));
+      } finally {
+        reset();
+        onClose();
       }
-    } catch (err) {
-      logError("fail to save/update review", err);
-      dispatch(showSnackbar("Failed to save/update review"));
-    } finally {
-      reset();
-      onClose();
+    } else {
+      const newOne = {
+        movie: movieId,
+        review: data.review,
+        rating,
+      };
+      try {
+        const data = await saveReview(newOne);
+        log("save review success from review dialog", data);
+        dispatch(showNoti("Successfully save review."));
+      } catch (err) {
+        log("save review error from review dialog", err);
+        dispatch(showNoti("Failed to save review."));
+      } finally {
+        reset();
+        onClose();
+      }
     }
   };
 

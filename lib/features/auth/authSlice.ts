@@ -1,6 +1,6 @@
 import { createAppSlice } from "@/lib/createAppSlice";
-import { BASE_URL } from "@/lib/config";
-import { log, logError } from "@/app/utils/logger";
+import { BASE_URL } from "@/utils/config";
+import { log, logError } from "@/utils/logger";
 
 export interface AuthSliceState {
   token: string;
@@ -9,10 +9,6 @@ export interface AuthSliceState {
 interface LoginRequest {
   username: string;
   password: string;
-}
-
-interface LoginResponse {
-  token: string;
 }
 
 const initialState: AuthSliceState = {
@@ -42,7 +38,7 @@ export const authSlice = createAppSlice({
             log("Invalid token case", json);
             return thunkApi.rejectWithValue(json.error || "Invalid user");
           }
-          return json as LoginResponse;
+          return json;
         } catch (error) {
           return thunkApi.rejectWithValue(
             error instanceof Error

@@ -6,7 +6,19 @@ import {
 } from "@mui/material";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { navItems } from "@/lib/items";
+import {
+  Home as HomeIcon,
+  LiveTv as LiveTvIcon,
+  Logout as LogoutIcon,
+  SpaceDashboard as DashboardIcon
+} from "@mui/icons-material";
+
+export const navItems = [
+  { label: "Home", href: "/", Icon: HomeIcon },
+  { label: "Dashboard", href: "/dashboard", Icon: DashboardIcon },
+  { label: "Movies", href: "/movies", Icon: LiveTvIcon },
+  { label: "Logout", href: "/logout", Icon: LogoutIcon },
+]
 
 export default function Navbar() {
   const pathname = usePathname();

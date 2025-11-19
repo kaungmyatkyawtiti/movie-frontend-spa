@@ -6,7 +6,7 @@ import MovieList from "./components/MovieList";
 import MovieEntry from "./components/MovieEntry";
 import { useState } from 'react';
 import CustomLoading from "@/components/CustomLoading";
-import { log } from "@/app/utils/logger";
+import { log } from "@/utils/logger";
 import CenteredMessage from "@/components/CenteredText";
 import MovieBanner from "./components/MovieBanner";
 

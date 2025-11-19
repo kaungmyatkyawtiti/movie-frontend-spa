@@ -2,7 +2,7 @@
 
 import { Box, Button, Typography } from '@mui/material';
 import { useEffect } from 'react'
-import { logError } from './utils/logger';
+import { logError } from '../utils/logger';
 
 interface ErrorProp {
   error: Error & { digest?: string },
