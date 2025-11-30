@@ -1,5 +1,5 @@
 import { createAppSlice } from "@/lib/createAppSlice";
-import { BASE_URL } from "@/utils/config";
+import { apiUrl } from "@/utils/config";
 import { log, logError } from "@/utils/logger";
 
 export interface AuthSliceState {
@@ -24,7 +24,7 @@ export const authSlice = createAppSlice({
     login: create.asyncThunk(
       async (userData: LoginRequest, thunkApi) => {
         try {
-          const response = await fetch(BASE_URL + `/api/users/login`, {
+          const response = await fetch(apiUrl + `/api/users/login`, {
             headers: {
               "Content-Type": "application/json",
             },
@@ -63,7 +63,6 @@ export const authSlice = createAppSlice({
           state.token = '';
         },
       },
-
     ),
 
     logout: create.reducer((state) => {

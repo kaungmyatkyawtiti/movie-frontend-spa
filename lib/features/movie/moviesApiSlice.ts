@@ -1,8 +1,8 @@
 import { log, logError } from "@/utils/logger";
-import { BASE_URL } from "@/utils/config";
 import { RootState } from "@/lib/store";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Director, Movie } from "@/types/movies";
+import { apiUrl } from "@/utils/config";
 
 type NewDirector = Omit<Director, "_id">;
 export type NewMovie = Omit<Movie, "_id" | "director"> & {
@@ -11,7 +11,7 @@ export type NewMovie = Omit<Movie, "_id" | "director"> & {
 
 export const moviesApiSlice = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: BASE_URL + "/api",
+    baseUrl: apiUrl + "/api",
     prepareHeaders: (headers, { getState }) => {
       const state = (getState() as RootState);
       log('prepareHeaders State ', state);
